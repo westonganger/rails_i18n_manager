@@ -1,0 +1,17 @@
+form
+  .row.align-items-center.g-1
+    .col-auto
+      = select_tag :app_name, options_for_select(RailsI18nManager::TranslationApp.order(name: :asc).pluck(:name), params[:app_name]), prompt: "All Apps", class: "form-select", style: "min-width: 220px"
+
+    .col-auto
+      = select_tag :status, options_for_select([["All Active", nil], "Missing", "Inactive", "All"], params[:status]), class: 'form-select', style: "min-width: 135px;"
+
+    .col-auto
+      = text_field_tag :search, params[:search], placeholder: "Search", class: "form-control"
+
+    .col-auto
+      button.btn.btn-primary.btn-sm type="submit" Filter
+
+      - if [:app_name, :search].any?{|x| params[x].present? }
+        - link_params = {status: params[:status]}.select{|_,v| v.present?}
+        = link_to "Clear", link_params, class: "btn btn-sm space-left"

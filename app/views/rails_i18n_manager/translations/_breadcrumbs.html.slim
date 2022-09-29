@@ -1,0 +1,17 @@
+nav style="--bs-breadcrumb-divider: '/';"
+  .breadcrumb
+    = breadcrumb_item "Translations", translations_path
+
+    - if action_name == "import"
+      = breadcrumb_item "Import", import_translations_path
+
+    - elsif @translation_key
+      - if @translation_key.new_record?
+        = breadcrumb_item "New", new_translation_path(@translation_key)
+      - else
+        = breadcrumb_item @translation_key.translation_app.name, translations_path(app_name: @translation_key.translation_app.name)
+
+        = breadcrumb_item @translation_key.key, translation_path(@translation_key)
+
+        - if ["edit", "update"].include?(action_name)
+          = breadcrumb_item "Edit", edit_translation_path(@translation_key)

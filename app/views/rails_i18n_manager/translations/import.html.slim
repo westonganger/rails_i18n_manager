@@ -1,0 +1,26 @@
+= render "breadcrumbs"
+
+h2.page-sub-title Import Translations from Source File
+
+.row
+  .col-6
+    = custom_form_for @form, as: :import_form, url: import_translations_path, method: :post, multipart: true, html: {class: "form-horizontal"} do |f|
+      = f.error_notification
+
+      = f.field :translation_app_id, label: "App Name", type: :select, collection: RailsI18nManager::TranslationApp.order(name: :asc).pluck(:name, :id)
+
+      = f.field :file, type: :file, help_text: "Expecting a complete translation file (.yml or .json) in the base locale. All translation keys for the entire locale must be in the single file."
+
+      = f.field :mark_inactive_translations, type: :checkbox, label: "Mark Inactive Translations?", help_text: "Any translation keys not found in the source file will be marked as 'Inactive' while found keys will be marked 'Active'. Marking a translation key as inactive excludes it from any data export and allows it to be deletable. Do not check this if you are uploading a partial translation file."
+
+      = f.field :overwrite_existing, type: :checkbox, label: "Overwrite existing translations?", help_text: "When enabled, if an existing translations exists it will be overwritten with the one contained in the file. If an outdated translation file is uploaded then it has the potential overwrite valuable translations in the app.", input_html: {"onclick" => 'if($(this).is(":checked")) alert("WARNING!\n\nEnabling overwrite can potentially be a highly destructive action. If an outdated translation file is uploaded then it has the potential overwrite valuable translations in the app. Please use caution.")'}
+
+      .form-group
+        button.btn.btn-primary type="submit" Save
+        = link_to "Cancel", {action: :index}, class: 'btn btn-secondary space-left'
+
+  .col-6
+    .alert.alert-dark.permanent
+      p This action will add translations that exist in the source file but do not exist in the database.
+      p This import will not delete any existing translations.
+      p You may import partial translations files with only some of the translation keys.

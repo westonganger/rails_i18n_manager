@@ -1,0 +1,108 @@
+<%
+  if options[:field_layout].to_s == "horizontal"
+    options[:field_wrapper_html][:class] ||= ""
+    options[:field_wrapper_html][:class].concat(" row").strip!
+
+    options[:label_wrapper_html][:class] ||= ""
+    options[:label_wrapper_html][:class].concat(" col-md-1 col-form-label text-md-end").strip!
+
+    options[:input_wrapper_html][:class] ||= ""
+    options[:input_wrapper_html][:class].concat(" col-auto g-md-0").strip!
+  end
+
+  if type == :text_area
+    options[:rows] = options[:rows] || 1
+  end
+
+  case type
+  when :select
+    if options.has_key?(:prompt)
+      if !options[:prompt].is_a?(String)
+        options[:prompt] = !!options[:prompt]
+      end
+    elsif options[:selected].nil?
+      options[:prompt] = true
+    end
+
+    if options[:prompt] == true
+      options[:prompt] = "Select..."
+    end
+
+    options[:input_html][:class] ||= ""
+    options[:input_html][:class].concat(" form-select").strip!
+  when :checkbox
+    checkbox_label = options.delete(:label)
+
+    options[:label_html][:class] ||= ""
+    options[:label_html][:class].concat(" form-check-label").strip!
+
+    options[:input_html][:class] ||= ""
+    options[:input_html][:class].concat(" form-check-input").strip!
+  else
+    options[:input_html][:class] ||= ""
+    if options[:input_html][:class].exclude?("form-control-plaintext")
+      options[:input_html][:class].concat(" form-control").strip!
+    end
+  end
+%>
+
+
+<% field = capture do %>
+  <% if type == :view %>
+    <%= text_field_tag nil, options[:input_html][:value], options[:input_html] %>
+  <% elsif type == :select %>
+    <%=
+      f.select(
+        method,
+        options[:collection],
+        {
+          include_blank: options[:include_blank],
+          selected: options[:selected],
+          prompt: options[:prompt],
+          disabled: options[:disabled]
+        },
+        options[:input_html],
+      )
+    %>
+  <% elsif type == :checkbox %>
+    <%= f.check_box method, **options[:input_html] %>
+    <%= f.label method, options[:label], **options[:label_html] do %>
+      <%= checkbox_label %>
+    <% end %>
+  <% elsif type == :textarea %>
+    <%= f.text_area method, options[:input_html] %>
+  <% else %>
+    <%= f.text_field method, options[:input_html] %>
+  <% end %>
+<% end %>
+
+<%= content_tag :div, **options[:field_wrapper_html] do %>
+  <%= content_tag :div, **options[:label_wrapper_html] do %>
+    <% if options[:label] %>
+      <%= f.label method, options[:label], **options[:label_html] do %>
+        <%= options[:label] %>
+        <% if options[:required] %>
+          <span><%= options[:required_text] %></span>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, **options[:input_wrapper_html] do %>
+    <%= field %>
+
+    <% if options[:help_text] %>
+      <small style="display:block;" class="text-muted">
+        <%= options[:help_text].html_safe %>
+      </small>
+    <% end %>
+
+    <% if options[:errors].present? %>
+      <div class="invalid-feedback">
+        <% options[:errors].each do |error| %>
+          <div><%= error %></div>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>

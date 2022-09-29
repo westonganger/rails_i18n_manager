@@ -1,0 +1,177 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  test_sqlite:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          ### TEST ALL RUBY VERSIONS, USE DEFAULT GEMFILE
+          - ruby: 2.3
+          - ruby: 2.4
+          - ruby: 2.5
+          - ruby: 2.6
+          - ruby: 2.7
+          - ruby: "3.0" ### must be quoted otherwise will be treated as "3" which will resolve to latest 3.x version
+          - ruby: 3.1
+          - ruby: 3.2
+
+          ### RAILS VERSION TESTING
+          - ruby: 2.6
+            env:
+              RAILS_VERSION: "5.0"
+          - ruby: 2.6
+            env:
+              RAILS_VERSION: "5.1"
+          - ruby: 2.6
+            env:
+              RAILS_VERSION: "5.2"
+          - ruby: 2.6
+            env:
+              RAILS_VERSION: "6.0"
+          - ruby: 2.6
+            env:
+              RAILS_VERSION: "6.1"
+          - ruby: "3.1"
+            env:
+              RAILS_VERSION: "7.0"
+
+    env:
+      BUNDLE_GEMFILE: "${{ matrix.gemfile }}"
+      DB_GEM: "sqlite3"
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: "${{ matrix.ruby }}"
+        bundler-cache: true
+
+    - name: Run tests
+      run: |
+        bundle exec rake
+
+
+  test_mysql:
+    runs-on: ubuntu-20.04
+    services:
+      mysql:
+        image: mariadb
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: test
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        ports: ['3306:3306']
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          ### RAILS VERSION TESTING
+          ### DONT WORRY ABOUT TESTING ALL RUBY VERSIONS. THIS IS COVERED IN THE SQLITE3 TESTS
+          - ruby: 2.6
+            env:
+              RAILS_VERSION: "5.0"
+          - ruby: 2.6
+            env:
+              RAILS_VERSION: "5.1"
+          - ruby: 2.6
+            env:
+              RAILS_VERSION: "5.2"
+          - ruby: 2.6
+            env:
+              RAILS_VERSION: "6.0"
+          - ruby: 2.6
+            env:
+              RAILS_VERSION: "6.1"
+          - ruby: "3.1"
+            env:
+              RAILS_VERSION: "7.0"
+
+    env:
+      BUNDLE_GEMFILE: "${{ matrix.gemfile }}"
+      DB_GEM: "mysql2"
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: "${{ matrix.ruby }}"
+        bundler-cache: true
+
+    - name: Run tests
+      env:
+        DATABASE_URL: mysql2://root:password@127.0.0.1:3306/test
+        RAILS_ENV: test
+      run: |
+        bundle exec rake
+
+
+  test_pg:
+    runs-on: ubuntu-20.04
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: test
+        ports: ['5432:5432']
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          ### RAILS VERSION TESTING
+          ### DONT WORRY ABOUT TESTING ALL RUBY VERSIONS. THIS IS COVERED IN THE SQLITE3 TESTS
+          - ruby: 2.6
+            env:
+              RAILS_VERSION: "5.0"
+          - ruby: 2.6
+            env:
+              RAILS_VERSION: "5.1"
+          - ruby: 2.6
+            env:
+              RAILS_VERSION: "5.2"
+          - ruby: 2.6
+            env:
+              RAILS_VERSION: "6.0"
+          - ruby: 2.6
+            env:
+              RAILS_VERSION: "6.1"
+          - ruby: "3.1"
+            env:
+              RAILS_VERSION: "7.0"
+
+    env:
+      BUNDLE_GEMFILE: "${{ matrix.gemfile }}"
+      DB_GEM: "pg"
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: "${{ matrix.ruby }}"
+        bundler-cache: true
+
+    - name: Run tests
+      env:
+        DATABASE_URL: postgres://postgres:password@localhost:5432/test
+        RAILS_ENV: test
+      run: |
+        bundle exec rake

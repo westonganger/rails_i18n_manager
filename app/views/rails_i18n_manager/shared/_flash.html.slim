@@ -1,0 +1,6 @@
+#flash-container
+  - flash.each do |name, msg|
+    - if msg.is_a?(String)
+      .alert.alert-dismissible class="alert-#{name.to_s == "notice" ? "success" : "danger"}"
+        button.btn-close type="button" data-bs-dismiss="alert"
+        span id="flash_#{name}" = msg

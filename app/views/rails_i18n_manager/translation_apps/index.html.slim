@@ -1,0 +1,27 @@
+.well.alert.alert-dark.permanent.pull-right style=("max-width: 920px;")
+  | Once you have created a #{RailsI18nManager::TranslationApp::NAME} then you can use the Import functionality on #{link_to "Translations Import page", import_translations_path}
+
+.row.align-items-center.g-3
+  .col-auto
+    h2.page-title = RailsI18nManager::TranslationApp::NAME.pluralize
+  .col-auto
+    = link_to "New App", new_translation_app_path, class: 'btn btn-primary btn-sm'
+
+.space-above4
+= render "filter_bar"
+
+table.table.table-striped.table-hover.space-above3.list-table
+  thead
+    tr
+      th = sort_link(:name)
+      th Default Locale
+      th Additional Locales
+      th Actions
+  tbody
+    - @translation_apps.each do |x|
+      tr
+        td = x.name
+        td = x.default_locale
+        td = x.additional_locales_array.join(", ")
+        td
+          = link_to "Edit", {action: :edit, id: x.id}

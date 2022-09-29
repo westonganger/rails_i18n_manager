@@ -1,0 +1,30 @@
+= render "breadcrumbs"
+
+h2
+  - if @translation_app.new_record?
+    | New Translation App
+  - else
+    | Edit Translation App
+
+- url = @translation_app.new_record? ? translation_apps_path : translation_app_path(@translation_app)
+- method = @translation_app.new_record? ? :post : :patch
+
+- view_mode = params[:action] == "show"
+
+= custom_form_for @translation_app, url: url, method: method, defaults: {view_mode: view_mode}, html: {class: "form-horizontal"} do |f|
+  = f.error_notification
+
+  = f.field :name, type: :text
+
+  = f.field :default_locale, type: :select, collection: RailsI18nManager.config.valid_locales.dup, selected: @translation_app.default_locale, include_blank: f.object.default_locale.nil?, input_html: {style: "width:120px;"}
+
+  = f.field :additional_locales, type: :select, collection: RailsI18nManager.config.valid_locales.dup, selected: @translation_app.additional_locales_array, include_blank: false, input_html: {multiple: true}, help_text: "Warning: Removing any locale will result in its translations being deleted."
+
+  - if !view_mode
+    .form-group
+      button.btn.btn-primary type="submit" Save
+
+      = link_to "Cancel", {action: :index}, class: 'btn btn-secondary space-left2'
+
+      - if !@translation_app.new_record?
+        = link_to "Delete", {action: :destroy, id: @translation_app.id}, method: :delete, data: { confirm: "WARNING: All the associated translations will be deleted.\n\nAre you sure you want to delete this translation app?" }, class: 'btn btn-danger space-left2'

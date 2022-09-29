@@ -1,0 +1,29 @@
+- view_mode = params[:action] == "show"
+
+= custom_form_for @translation_key, url: translation_path(@translation_key), method: :patch, defaults: {view_mode: view_mode, field_layout: :horizontal} do |f|
+  = f.view_field label: "App Name", value: @translation_key.translation_app.name
+  = f.view_field label: "Key", value: @translation_key.key, help_text: ("Nested Keys are denoted with dot (.)" if @translation_key.key.include?("."))
+
+  - if !@translation_key.active
+    = f.view_field label: "Status", value: "Inactive"
+    = link_to "Delete", {action: :destroy, id: @translation_key.id}, method: :delete, class: "btn btn-danger btn-sm space-left3", "data-confirm" => "Are you sure you want to delete this record?"
+
+  = render "sub_nav"
+
+  .translations-container
+    - sorted_translation_values = []
+
+    - @translation_key.translation_app.all_locales.each do |locale|
+      - val_record = @translation_key.translation_values.detect{|x| x.locale == locale.to_s }
+      - if val_record.nil?
+        - val_record = @translation_key.translation_values.new(locale: locale)
+      - sorted_translation_values << val_record
+
+    = f.fields_for :translation_values, sorted_translation_values do |f2|
+      = render "translation_value_fields", f: f2
+
+  - if !view_mode
+    .form-group
+      .col-lg-offset-2.col-md-offset-2.col-sm-offset-3.col-lg-10.col-md-10.col-sm-9
+        button.btn.btn-primary type="submit" Save
+        = link_to "Cancel", {action: :index}, class: 'btn btn-secondary space-left2'

@@ -1,0 +1,12 @@
+nav style="--bs-breadcrumb-divider: '/';"
+  .breadcrumb
+    = breadcrumb_item RailsI18nManager::TranslationApp::NAME.pluralize, translation_apps_path
+
+    - if @translation_app
+      - if @translation_app.new_record?
+        = breadcrumb_item "New", new_translation_app_path
+      - else
+        = breadcrumb_item @translation_app.name, translation_app_path(@translation_app)
+
+        - if ["edit", "update"].include?(action_name)
+          = breadcrumb_item "Edit", edit_translation_app_path(@translation_app)

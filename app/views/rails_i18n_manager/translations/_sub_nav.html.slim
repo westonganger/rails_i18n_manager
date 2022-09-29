@@ -1,0 +1,7 @@
+ul.nav.nav-tabs.space-below5.space-above3
+  = nav_link "View", translation_path(@translation_key)
+
+  = nav_link "Edit", edit_translation_path(@translation_key), active: ["edit", "update"].include?(action_name)
+
+  - if @translation_key.any_missing_translations?
+    = nav_link "Translate Missing with Google", translate_missing_translations_path(translation_key_id: @translation_key.id), method: :post, "data-confirm" => "Are you sure you want to proceed with translating the missing translations for this entry?"

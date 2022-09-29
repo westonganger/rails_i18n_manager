@@ -1,0 +1,5 @@
+en:
+  activerecord:
+    attributes:
+      'rails_i18n_manager/board':
+        num_iterations_to_track: "Number of Iterations to Track"

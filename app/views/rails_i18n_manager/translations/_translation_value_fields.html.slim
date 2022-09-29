@@ -1,0 +1,10 @@
+- locale = f.object.locale
+- default_locale = f.object.translation_key.translation_app.default_locale
+
+- if default_locale == locale
+  - help_text = "This default translation will be utilized whenever a more specific language is not available"
+  - required = true
+
+.nested-fields.translation-value-fields
+  = f.hidden_field :locale
+  = f.field :translation, type: :textarea, label: "#{locale}", required: required, help_text: help_text, field_layout: :horizontal, input_html: {rows: 1, width: "100%;"}
