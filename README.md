@@ -3,7 +3,7 @@
 
 <a href='https://github.com/westonganger/rails_i18n_manager/actions' target='_blank'><img src="https://github.com/westonganger/rails_i18n_manager/workflows/Tests/badge.svg" style="max-width:100%;" height='21' style='border:0px;height:21px;' border='0' alt="CI Status"></a>
 
-Web interface to manage i18n translations for your apps to facilitate the editors of your translations. Provides a low-tech and complete workflow for importing, translating, and exporting your I18n translation files. Design to allows you to keep the translation files inside your projects git repository where they should be.
+Web interface to manage i18n translations helping to facilitate the editors of your translations. Provides a low-tech and complete workflow for importing, translating, and exporting your I18n translation files. Designed to allow you to keep the translation files inside your projects git repository where they should be.
 
 Features:
 
