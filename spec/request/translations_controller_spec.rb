@@ -114,11 +114,38 @@ module RailsI18nManager
             bar:
             baz:
         YAML
-        filename = Rails.root.join("tmp/#{SecureRandom.hex(6)}.yaml")
+        filename = Rails.root.join("tmp/#{SecureRandom.hex(6)}.yml")
         File.write(filename, yaml, mode: "wb")
-        file_upload = Rack::Test::UploadedFile.new(filename)
-        post rails_i18n_manager.import_translations_path, params: {translation_app_id: translation_app.id, file: file_upload}
-        expect(response).to have_http_status(200)
+
+        post rails_i18n_manager.import_translations_path, params: {
+          import_form: {
+            translation_app_id: translation_app.id,
+            file: Rack::Test::UploadedFile.new(filename)
+          }
+        }
+        expect(assigns(:form).errors.full_messages).to be_empty
+        expect(response).to redirect_to(rails_i18n_manager.translations_path)
+
+        json_content = <<~JSON_CONTENT
+          {
+            "en": {
+              "foo": null,
+              "bar": "bar",
+              "baz": null
+            }
+          }
+        JSON_CONTENT
+        filename = Rails.root.join("tmp/#{SecureRandom.hex(6)}.json")
+        File.write(filename, json_content, mode: "wb")
+
+        post rails_i18n_manager.import_translations_path, params: {
+          import_form: {
+            translation_app_id: translation_app.id,
+            file: Rack::Test::UploadedFile.new(filename)
+          }
+        }
+        expect(assigns(:form).errors.full_messages).to be_empty
+        expect(response).to redirect_to(rails_i18n_manager.translations_path)
       end
     end
 

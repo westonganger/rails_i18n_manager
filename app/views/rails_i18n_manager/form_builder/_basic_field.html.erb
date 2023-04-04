@@ -20,7 +20,7 @@
       if !options[:prompt].is_a?(String)
         options[:prompt] = !!options[:prompt]
       end
-    elsif options[:selected].nil?
+    elsif options[:selected].blank? && !options[:include_blank]
       options[:prompt] = true
     end
 

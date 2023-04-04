@@ -42,7 +42,7 @@ module RailsI18nManager
 
         when ".json"
           begin
-            JSON.parse(file.read)
+            JSON.parse(File.read(file))
           rescue JSON::ParserError
             errors.add(:file, "Invalid json file.")
             return

@@ -105,7 +105,7 @@ module RailsI18nManager
           begin
             TranslationsImportJob.new.perform(
               translation_app_id: @form.translation_app_id,
-              import_file: @form.file,
+              import_file: @form.file.path,
               overwrite_existing: @form.overwrite_existing,
               mark_inactive_translations: @form.mark_inactive_translations,
             )
