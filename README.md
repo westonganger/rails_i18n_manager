@@ -14,7 +14,9 @@ Features:
 
 ## Screenshots
 ![Screenshot](/screenshot_list.png)
+<br><br>
 ![Screenshot](/screenshot_import.png)
+<br><br>
 ![Screenshot](/screenshot_edit.png)
 
 ## Setup

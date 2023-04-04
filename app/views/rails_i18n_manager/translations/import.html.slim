@@ -9,7 +9,7 @@ h2.page-sub-title Import Translations from Source File
 
       = f.field :translation_app_id, label: "App Name", type: :select, collection: RailsI18nManager::TranslationApp.order(name: :asc).pluck(:name, :id)
 
-      = f.field :file, type: :file, help_text: "Expecting a complete translation file (.yml or .json) in the base locale. All translation keys for the entire locale must be in the single file."
+      = f.field :file, type: :file, label: "Translation File", help_text: "Allowed file types: yml, json"
 
       = f.field :mark_inactive_translations, type: :checkbox, label: "Mark Inactive Translations?", help_text: "Any translation keys not found in the source file will be marked as 'Inactive' while found keys will be marked 'Active'. Marking a translation key as inactive excludes it from any data export and allows it to be deletable. Do not check this if you are uploading a partial translation file."
 
