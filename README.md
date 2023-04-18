@@ -23,9 +23,19 @@ Features:
 
 Developed as a Rails engine. So you can add to any existing app or create a brand new app with the functionality.
 
+First add the gem to your Gemfile
+
 ```ruby
 ### Gemfile
 gem "rails_i18n_manager", git: "https://github.com/westonganger/rails_i18n_manager"
+```
+
+Then install and run the database migrations
+
+```sh
+bundle install
+bundle exec rake rails_i18n_manager:install:migrations
+bundle exec rake db:migrate
 ```
 
 ### Routes
