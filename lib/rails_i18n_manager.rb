@@ -13,18 +13,6 @@ module RailsI18nManager
     end
   end
 
-  # def self.with_fresh_i18n_load_paths(load_paths, &block)
-  #   prev_load_path = I18n.load_path
-
-  #   I18n.load_path = load_paths
-  #   I18n.backend.reload!
-
-  #   block.call
-  # ensure
-  #   I18n.load_path = prev_load_path
-  #   I18n.backend.reload!
-  # end
-
   def self.fetch_flattened_dot_notation_keys(translations_hash)
     keys = []
 
