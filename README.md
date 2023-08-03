@@ -27,7 +27,7 @@ First add the gem to your Gemfile
 
 ```ruby
 ### Gemfile
-gem "rails_i18n_manager", git: "https://github.com/westonganger/rails_i18n_manager"
+gem "rails_i18n_manager"
 ```
 
 Then install and run the database migrations
