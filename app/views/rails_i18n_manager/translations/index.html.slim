@@ -48,3 +48,5 @@ table.table.table-striped.table-hover.space-above3.list-table
 
           - if x.any_missing_translations?
             span.space-left2 = link_to "Translate with Google", translate_missing_translations_path(id: x.id), method: :post, "data-confirm" => "Are you sure you want to proceed with translating the missing translations for this entry?"
+
+= paginate @translation_keys

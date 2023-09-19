@@ -25,3 +25,5 @@ table.table.table-striped.table-hover.space-above3.list-table
         td = x.additional_locales_array.join(", ")
         td
           = link_to "Edit", {action: :edit, id: x.id}
+
+= paginate @translation_apps
