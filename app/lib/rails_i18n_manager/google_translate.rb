@@ -1,5 +1,6 @@
 module RailsI18nManager
   module GoogleTranslate
+    require 'easy_translate'
 
     def self.translate(text, from:, to:)
       api_key = RailsI18nManager.config.google_translate_api_key
@@ -13,7 +14,7 @@ module RailsI18nManager
         return nil
       end
 
-      EasyTranslate.translate(text, from: from, to: to, key: api_key)
+      translation = EasyTranslate.translate(text, from: from, to: to, key: api_key)
 
       if translation
         str = translation.to_s
