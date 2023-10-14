@@ -154,11 +154,10 @@ Run server using: `bin/dev` or `cd test/dummy/; rails s`
 bundle exec rspec
 ```
 
-We can locally test different versions of Rails using `ENV['RAILS_VERSION']` and different database gems using `ENV['DB_GEM']`
+We can locally test different versions of Rails using `ENV['RAILS_VERSION']`
 
 ```
 export RAILS_VERSION=7.0
-export DB_GEM=sqlite3
 bundle install
 bundle exec rspec
 ```
