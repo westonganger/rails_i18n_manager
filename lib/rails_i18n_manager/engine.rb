@@ -4,6 +4,7 @@ require 'kaminari'
 require "zip"
 require "activerecord-import"
 require "csv"
+require "easy_translate"
 
 module RailsI18nManager
   class Engine < ::Rails::Engine
