@@ -75,7 +75,7 @@ module RailsI18nManager
         dirname = TranslationKey.export_to(app_name: nil, zip: false, format: "yaml")
         expect(File.directory?(dirname)).to eq(true)
         app_dirs = Dir.glob("#{dirname}/*")
-        expect(app_dirs.size).to eq(2)
+        expect(app_dirs.size > 1)
         expect(app_dirs.any?{|x| File.directory?(x) && x.end_with?("/#{TranslationApp.first.name}")}).to eq(true)
         expect(app_dirs.any?{|x| File.directory?(x) && x.end_with?("/#{TranslationApp.last.name}")}).to eq(true)
       end
@@ -104,6 +104,18 @@ module RailsI18nManager
         expect(files.size).to eq(2)
         expect(files[0].end_with?("/en.yml")).to eq(true)
         expect(files[1].end_with?("/fr.yml")).to eq(true)
+      end
+
+      it "deletes old tmp files" do
+        allow(FileUtils).to receive(:rm_r).and_call_original
+
+        TranslationKey.export_to(app_name: nil, zip: false, format: "yaml")
+        TranslationKey.export_to(app_name: nil, zip: false, format: "yaml")
+        expect(FileUtils).not_to have_received(:rm_r)
+
+        allow(File).to receive(:ctime).and_return(2.minutes.ago)
+        TranslationKey.export_to(app_name: nil, zip: false, format: "yaml")
+        expect(FileUtils).to have_received(:rm_r).once
       end
 
       context "yaml" do

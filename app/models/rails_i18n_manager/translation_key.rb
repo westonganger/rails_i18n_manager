@@ -79,14 +79,12 @@ module RailsI18nManager
 
       base_export_path = Rails.root.join("tmp/export/translations/")
 
-      files_to_delete = Dir.glob("#{base_export_path}/*").each do |f|
-        if File.ctime(f) > 1.minutes.ago
-          `rm -rf #{f}`
-          #File.delete(f)
-        end
+      files_to_delete = Dir.glob("#{base_export_path}/*").select{|f| File.ctime(f) < 1.minutes.ago }
+      if !files_to_delete.empty?
+        FileUtils.rm_r(files_to_delete, force: true)
       end
 
-      base_folder_path = File.join(base_export_path, "#{Time.now.to_i}/")
+      base_folder_path = File.join(base_export_path, "#{Time.now.to_i}-#{SecureRandom.hex(6)}/")
 
       FileUtils.mkdir_p(base_folder_path)
 

@@ -2,6 +2,7 @@
 
 ### Unreleased - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.0.0...master)
 - [#13](https://github.com/westonganger/rails_i18n_manager/pull/13) - Remove usage of Array#intersection to fix errors in Ruby 2.6 and below
+- [#12](https://github.com/westonganger/rails_i18n_manager/pull/12) - Fix for cleaning old tmp files created from TranslationKey#export_to
 - [#11](https://github.com/westonganger/rails_i18n_manager/pull/11) - Fix google translate and add specs
 - [#10](https://github.com/westonganger/rails_i18n_manager/pull/10) - Add missing pagination links to index pages
 
