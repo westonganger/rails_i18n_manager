@@ -142,7 +142,7 @@ module RailsI18nManager
         locales = (app_locales || key_record.translation_app.additional_locales_array)
 
         ### Filter to just google translate supported languages
-        locales = locales.intersection(GoogleTranslate::SUPPORTED_LOCALES)
+        locales = (locales & GoogleTranslate::SUPPORTED_LOCALES) # intersection
 
         default_translation_text = key_record.default_translation
 
