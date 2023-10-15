@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ### Unreleased - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.0.0...master)
+- [#11](https://github.com/westonganger/rails_i18n_manager/pull/11) - Fix google translate and add specs
 - [#10](https://github.com/westonganger/rails_i18n_manager/pull/10) - Add missing pagination links to index pages
 
 ### v1.0.0 - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/9c8305c...v1.0.0)
