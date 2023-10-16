@@ -13,6 +13,7 @@ require 'bundler/gem_tasks'
 
 task :test do
   system("rspec", out: STDOUT)
+  exit $?.exitstatus
 end
 
 task default: :test
