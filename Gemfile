@@ -11,10 +11,12 @@ gemspec
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
 
-ENV['DB_GEM'] ||= 'sqlite3'
+def get_env(name)
+  (ENV[name] && !ENV[name].empty?) ? ENV[name] : nil
+end
 
-gem 'rails', ENV["RAILS_VERSION"]
-gem ENV['DB_GEM']
+gem "rails", get_env("RAILS_VERSION")
+gem "sqlite3"
 
 group :development, :test do
   gem "sprockets-rails" ### just for dummy app
