@@ -11,9 +11,9 @@ load 'rails/tasks/statistics.rake'
 
 require 'bundler/gem_tasks'
 
-task :test do
-  system("rspec", out: STDOUT)
-  exit $?.exitstatus
-end
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new(:spec)
 
-task default: :test
+task test: [:spec]
+
+task default: [:spec]
