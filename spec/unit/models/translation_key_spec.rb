@@ -85,7 +85,7 @@ module RailsI18nManager
 
         dirname = TranslationKey.export_to(app_name: translation_app.name, zip: false, format: "yaml")
         expect(File.directory?(dirname)).to eq(true)
-        files = Dir.glob("#{dirname}/*")
+        files = Dir.glob("#{dirname}/*").sort
         expect(files.size).to eq(2)
         expect(files[0].end_with?("/en.yml")).to eq(true)
         expect(files[1].end_with?("/fr.yml")).to eq(true)
@@ -100,7 +100,7 @@ module RailsI18nManager
       it "doesnt zip the content if zip: false" do
         dirname = TranslationKey.export_to(app_name: translation_app.name, zip: false, format: "yaml")
         expect(File.directory?(dirname)).to eq(true)
-        files = Dir.glob("#{dirname}/**/*")
+        files = Dir.glob("#{dirname}/**/*").sort
         expect(files.size).to eq(2)
         expect(files[0].end_with?("/en.yml")).to eq(true)
         expect(files[1].end_with?("/fr.yml")).to eq(true)
