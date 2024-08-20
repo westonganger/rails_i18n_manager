@@ -1,4 +1,4 @@
-class AddRailsI18nManagerTables < ActiveRecord::Migration[6.0]
+class AddRailsI18nManagerTables < ActiveRecord::Migration[5.2]
   def change
 
     create_table :rails_i18n_manager_translation_apps do |t|
