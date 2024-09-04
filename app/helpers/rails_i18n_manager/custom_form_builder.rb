@@ -79,7 +79,7 @@ module RailsI18nManager
       options[:input_html][:class] ||= ""
       options[:input_html][:class].concat(" form-control-plaintext").strip!
       options[:input_html][:readonly] = true
-      options[:input_html][:type] = "textarea"
+      options[:input_html][:type] = "text"
       options[:input_html].delete(:name)
 
       if !options[:input_html].has_key?(:value)
