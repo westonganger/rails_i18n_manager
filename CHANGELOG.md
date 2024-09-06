@@ -2,6 +2,7 @@
 
 ### Unreleased - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.0.1...master)
 - Drop support for Rails v5.x
+- [#19](https://github.com/westonganger/rails_i18n_manager/pull/19) - Fix width issue on translation values form and view page
 
 ### v1.0.1 - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.0.0...v1.0.1)
 - [#14](https://github.com/westonganger/rails_i18n_manager/pull/14) - Remove usage of Array#intersection to fix errors in Ruby 2.6 and below

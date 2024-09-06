@@ -7,7 +7,7 @@
     options[:label_wrapper_html][:class].concat(" col-md-1 col-form-label text-md-end").strip!
 
     options[:input_wrapper_html][:class] ||= ""
-    options[:input_wrapper_html][:class].concat(" col-auto g-md-0").strip!
+    options[:input_wrapper_html][:class].concat(" col-md-11").strip!
   end
 
   if type == :text_area
@@ -49,7 +49,7 @@
 
 <% field = capture do %>
   <% if type == :view %>
-    <%= text_field_tag nil, options[:input_html][:value], options[:input_html] %>
+    <%= text_area_tag nil, options[:input_html][:value], options[:input_html] %>
   <% elsif type == :select %>
     <%=
       f.select(
