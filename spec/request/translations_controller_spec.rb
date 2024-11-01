@@ -98,7 +98,7 @@ module RailsI18nManager
     end
 
     context "import" do
-      it "succeeds" do
+      it "behaves as expected when nothing uploaded" do
         get rails_i18n_manager.import_translations_path
         expect(response).to have_http_status(200)
 
@@ -107,13 +107,17 @@ module RailsI18nManager
 
         post rails_i18n_manager.import_translations_url, params: {translation_app_id: translation_app.id}
         expect(response).to have_http_status(200)
+      end
 
+      it "accepts for .yml and .yaml files" do
         yaml = <<~YAML
           en:
             foo:
             bar:
             baz:
         YAML
+
+        #.yml
         filename = Rails.root.join("tmp/#{SecureRandom.hex(6)}.yml")
         File.write(filename, yaml, mode: "wb")
 
@@ -126,6 +130,21 @@ module RailsI18nManager
         expect(assigns(:form).errors.full_messages).to be_empty
         expect(response).to redirect_to(rails_i18n_manager.translations_path)
 
+        # .yaml
+        filename = Rails.root.join("tmp/#{SecureRandom.hex(6)}.yaml")
+        File.write(filename, yaml, mode: "wb")
+
+        post rails_i18n_manager.import_translations_path, params: {
+          import_form: {
+            translation_app_id: translation_app.id,
+            file: Rack::Test::UploadedFile.new(filename)
+          }
+        }
+        expect(assigns(:form).errors.full_messages).to be_empty
+        expect(response).to redirect_to(rails_i18n_manager.translations_path)
+      end
+
+      it "accepts .json files" do
         json_content = <<~JSON_CONTENT
           {
             "en": {
@@ -135,6 +154,7 @@ module RailsI18nManager
             }
           }
         JSON_CONTENT
+
         filename = Rails.root.join("tmp/#{SecureRandom.hex(6)}.json")
         File.write(filename, json_content, mode: "wb")
 
@@ -146,6 +166,26 @@ module RailsI18nManager
         }
         expect(assigns(:form).errors.full_messages).to be_empty
         expect(response).to redirect_to(rails_i18n_manager.translations_path)
+      end
+
+      it "renders errors when another file type provided" do
+        json_content = <<~JSON_CONTENT
+          {
+            "en": "foo"
+          }
+        JSON_CONTENT
+
+        filename = Rails.root.join("tmp/#{SecureRandom.hex(6)}.conf")
+        File.write(filename, json_content, mode: "wb")
+
+        post rails_i18n_manager.import_translations_path, params: {
+          import_form: {
+            translation_app_id: translation_app.id,
+            file: Rack::Test::UploadedFile.new(filename)
+          }
+        }
+        expect(assigns(:form).errors.full_messages).to eq(["File Invalid file format. Must be yaml or json file."])
+        expect(response).to have_http_status(200)
       end
     end
 

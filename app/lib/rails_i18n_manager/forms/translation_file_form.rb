@@ -23,26 +23,30 @@ module RailsI18nManager
           return
         end
 
-        if [".yml", ".json"].exclude?(File.extname(file))
-          errors.add(:file, "Invalid file format. Must be yml or json file.")
+        file_extname = File.extname(file)
+
+        if [".yml", ".yaml", ".json"].exclude?(file_extname)
+          errors.add(:file, "Invalid file format. Must be yaml or json file.")
           return
         end
 
-        if File.read(file).blank?
+        file_contents = File.read(file)
+
+        if file_contents.blank?
           errors.add(:file, "Empty file provided.")
           return
         end
 
-        case File.extname(file)
-        when ".yml"
-          if !YAML.safe_load(File.read(file)).is_a?(Hash)
-            errors.add(:file, "Invalid yml file.")
+        case file_extname
+        when ".yml", ".yaml"
+          if !YAML.safe_load(file_contents).is_a?(Hash)
+            errors.add(:file, "Invalid #{file_extname.sub(".","")} file.")
             return
           end
 
         when ".json"
           begin
-            JSON.parse(File.read(file))
+            JSON.parse(file_contents)
           rescue JSON::ParserError
             errors.add(:file, "Invalid json file.")
             return
