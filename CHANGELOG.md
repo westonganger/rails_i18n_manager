@@ -1,7 +1,7 @@
 # CHANGELOG
 
 ### Unreleased - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.0.2...master)
-- Nothing yet
+- [#21](https://github.com/westonganger/rails_i18n_manager/pull/21) - Switch to digested assets using either propshaft or sprockets
 
 ### v1.0.2 - November 7, 2024 - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.0.1...v1.0.2)
 - [View commit](https://github.com/westonganger/rails_i18n_manager/commit/ccdeea7cdfb409b61e5d8ef23b03c52fbfd027c0) - Allow `.yaml` files to be uploaded. Previously the upload validation would only allow `.yml`.
