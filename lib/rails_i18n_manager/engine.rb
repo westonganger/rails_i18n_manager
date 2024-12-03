@@ -17,27 +17,27 @@ module RailsI18nManager
       app.middleware.use ::ActionDispatch::Static, "#{root}/public"
     end
 
-    ### Were not using sprockets were just storing everything in public
-    ### Sprockets Config below
-    # initializer "rails_i18n_manager.assets.precompile" do |app|
-    #   app.config.assets.precompile << "rails_i18n_manager_manifest.js" ### manifest file required
-    #   app.config.assets.precompile << "rails_i18n_manager/favicon.ico"
+    initializer "rails_i18n_manager.assets.precompile" do |app|
+      # this initializer is only called when sprockets is in use
 
-    #   ### Automatically precompile assets in specified folders
-    #   ["app/assets/images/"].each do |folder|
-    #     dir = app.root.join(folder)
+      app.config.assets.precompile << "rails_i18n_manager_manifest.js" ### manifest file required
+      app.config.assets.precompile << "rails_i18n_manager/favicon.ico"
 
-    #     if Dir.exist?(dir)
-    #       Dir.glob(File.join(dir, "**/*")).each do |f|
-    #         asset_name = f.to_s
-    #           .split(folder).last # Remove fullpath
-    #           .sub(/^\/*/, '') ### Remove leading '/'
+      ### Automatically precompile assets in specified folders
+      ["app/assets/images/"].each do |folder|
+        dir = app.root.join(folder)
 
-    #         app.config.assets.precompile << asset_name
-    #       end
-    #     end
-    #   end
-    # end
+        if Dir.exist?(dir)
+          Dir.glob(File.join(dir, "**/*")).each do |f|
+            asset_name = f.to_s
+              .split(folder).last # Remove fullpath
+              .sub(/^\/*/, '') ### Remove leading '/'
+
+            app.config.assets.precompile << asset_name
+          end
+        end
+      end
+    end
 
   end
 end

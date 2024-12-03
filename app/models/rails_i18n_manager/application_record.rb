@@ -4,7 +4,7 @@ module RailsI18nManager
 
     include ActiveSortOrder
 
-    scope :multi_search, ->(full_str){ 
+    scope :multi_search, ->(full_str){
       if full_str.present?
         rel = self
 

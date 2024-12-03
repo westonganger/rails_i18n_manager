@@ -15,17 +15,19 @@ def get_env(name)
   (ENV[name] && !ENV[name].empty?) ? ENV[name] : nil
 end
 
-gem "rails", get_env("RAILS_VERSION")
+rails_version = get_env("RAILS_VERSION")
+
+gem "rails", rails_version
+
+if rails_version.nil? || rails_version.sub("~>","").to_f >= 8.0
+  gem "propshaft"
+else
+  gem "sprockets-rails", require: "sprockets/railtie"
+end
 
 db_gem = get_env("DB_GEM") || "sqlite3"
 gem db_gem, get_env("DB_GEM_VERSION")
 
-group :development, :test do
-  gem "sprockets-rails" ### just for dummy app
-end
-
 group :development do
-  gem "webrick"
-  gem "better_errors"
-  gem 'binding_of_caller'
+  gem "puma"
 end
