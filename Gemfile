@@ -19,12 +19,6 @@ rails_version = get_env("RAILS_VERSION")
 
 gem "rails", rails_version
 
-if rails_version.nil? || rails_version.sub("~>","").to_f >= 8.0
-  gem "propshaft"
-else
-  gem "sprockets-rails", require: "sprockets/railtie"
-end
-
 db_gem = get_env("DB_GEM") || "sqlite3"
 gem db_gem, get_env("DB_GEM_VERSION")
 

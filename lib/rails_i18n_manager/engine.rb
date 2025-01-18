@@ -16,28 +16,5 @@ module RailsI18nManager
       ### Expose static assets
       app.middleware.use ::ActionDispatch::Static, "#{root}/public"
     end
-
-    initializer "rails_i18n_manager.assets.precompile" do |app|
-      # this initializer is only called when sprockets is in use
-
-      app.config.assets.precompile << "rails_i18n_manager_manifest.js" ### manifest file required
-      app.config.assets.precompile << "rails_i18n_manager/favicon.ico"
-
-      ### Automatically precompile assets in specified folders
-      ["app/assets/images/"].each do |folder|
-        dir = app.root.join(folder)
-
-        if Dir.exist?(dir)
-          Dir.glob(File.join(dir, "**/*")).each do |f|
-            asset_name = f.to_s
-              .split(folder).last # Remove fullpath
-              .sub(/^\/*/, '') ### Remove leading '/'
-
-            app.config.assets.precompile << asset_name
-          end
-        end
-      end
-    end
-
   end
 end
