@@ -139,7 +139,7 @@ module RailsI18nManager
           return nil
         end
 
-        zip_file = Zip::File.open(temp_file, create: !File.exist?(temp_file)) do |zipfile|
+        zip_file = Zip::File.open(temp_file, create: true) do |zipfile|
           files_to_write.each do |file|
             zipfile.add(file.sub(base_folder_path, "translations/"), file)
           end
