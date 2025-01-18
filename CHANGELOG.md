@@ -1,7 +1,7 @@
 # CHANGELOG
 
 ### Unreleased - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.0.3...master)
-  - Nothing yet
+- [#23](https://github.com/westonganger/rails_i18n_manager/pull/23) - Fix issues with rubyzip 2.4+ create option
 
 ### v1.0.3 - December 2, 2024 - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.0.2...v1.0.3)
 - [#21](https://github.com/westonganger/rails_i18n_manager/pull/21) - Switch to digested assets using either propshaft or sprockets
