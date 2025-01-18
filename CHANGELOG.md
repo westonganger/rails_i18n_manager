@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ### Unreleased - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.0.3...master)
+- [#24](https://github.com/westonganger/rails_i18n_manager/pull/24) - Completely remove usage of sprockets or propshaft
 - [#23](https://github.com/westonganger/rails_i18n_manager/pull/23) - Fix issues with rubyzip 2.4+ create option
 
 ### v1.0.3 - December 2, 2024 - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.0.2...v1.0.3)

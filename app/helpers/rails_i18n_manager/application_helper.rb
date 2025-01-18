@@ -17,11 +17,6 @@ module RailsI18nManager
       fields_for(*args, options, &block)
     end
 
-    ASSET_VERSION = `git show -s --format=%ci`.parameterize.freeze
-    def custom_asset_path(path)
-      "#{path}?v=#{Rails.env.development? ? Time.now.to_i : ASSET_VERSION}"
-    end
-
     def breadcrumb_item(title, url=nil)
       if url.nil?
         %Q(<span class="breadcrumb-item">#{title}</span>).html_safe
