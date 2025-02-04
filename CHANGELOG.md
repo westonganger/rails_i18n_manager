@@ -3,7 +3,7 @@
 ### Unreleased - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.1.1...master)
 - Nothing yet
 
-### Unreleased - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.1.0...v1.1.1)
+### v1.1.1 - Febuary 4, 2025 - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.1.0...v1.1.1)
 - [#26](https://github.com/westonganger/rails_i18n_manager/pull/26) - Fix file not found issues with file import
 - [#25](https://github.com/westonganger/rails_i18n_manager/pull/25) - Remove catch-all 404 route definition
 
