@@ -14,8 +14,6 @@ RailsI18nManager::Engine.routes.draw do
 
   get "/robots", to: "application#robots", constraints: ->(req){ req.format == :text }
 
-  match "*a", to: "application#render_404", via: :get
-
   get "/", to: "translations#index"
 
   root "translations#index"
