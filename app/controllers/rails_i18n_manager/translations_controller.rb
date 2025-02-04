@@ -102,10 +102,16 @@ module RailsI18nManager
         render
       else
         if @form.valid?
+          if @form.file.path.end_with?(".json")
+            parsed_file_contents = JSON.parse(@form.file.read)
+          else
+            parsed_file_contents = YAML.safe_load(@form.file.read)
+          end
+
           begin
             TranslationsImportJob.new.perform(
               translation_app_id: @form.translation_app_id,
-              import_file: @form.file.path,
+              parsed_file_contents: parsed_file_contents,
               overwrite_existing: @form.overwrite_existing,
               mark_inactive_translations: @form.mark_inactive_translations,
             )

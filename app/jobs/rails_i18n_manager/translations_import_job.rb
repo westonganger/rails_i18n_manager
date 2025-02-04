@@ -1,24 +1,18 @@
 module RailsI18nManager
-  class TranslationsImportJob < ApplicationJob
+  class TranslationsImportJob
 
     class ImportAbortedError < StandardError; end
 
-    def perform(translation_app_id:, import_file:, overwrite_existing: false, mark_inactive_translations: false)
+    def perform(translation_app_id:, parsed_file_contents:, overwrite_existing: false, mark_inactive_translations: false)
       app_record = TranslationApp.find(translation_app_id)
 
-      if import_file.end_with?(".json")
-        translations_hash = JSON.parse(File.read(import_file))
-      else
-        translations_hash = YAML.safe_load(File.read(import_file))
-      end
-
-      new_locales = translations_hash.keys - app_record.all_locales
+      new_locales = parsed_file_contents.keys - app_record.all_locales
 
       if new_locales.any?
         raise ImportAbortedError.new("Import aborted. Locale not listed in translation app: #{new_locales.join(', ')}")
       end
 
-      all_keys = RailsI18nManager.fetch_flattened_dot_notation_keys(translations_hash)
+      all_keys = RailsI18nManager.fetch_flattened_dot_notation_keys(parsed_file_contents)
 
       key_records_by_key = app_record.translation_keys.includes(:translation_values).index_by(&:key)
 
@@ -35,7 +29,7 @@ module RailsI18nManager
         app_record.all_locales.each do |locale|
           split_keys = [locale] + key.split(".").map{|x| x}
 
-          val = translations_hash.dig(*split_keys)
+          val = parsed_file_contents.dig(*split_keys)
 
           if val.present?
             val_record = key_record.translation_values.detect{|x| x.locale == locale.to_s }
