@@ -32,7 +32,7 @@ module RailsI18nManager
 
         case file_extname
         when ".yml", ".yaml"
-          @parsed_file_contents = YAML.safe_load(file_contents_string)
+          @parsed_file_contents = YAML.safe_load(file_contents_string, permitted_classes: [Symbol])
         when ".json"
           @parsed_file_contents = JSON.parse(file_contents_string)
         end
