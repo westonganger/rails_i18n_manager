@@ -29,7 +29,18 @@ module RailsI18nManager
         app_record.all_locales.each do |locale|
           split_keys = [locale] + key.split(".").map{|x| x}
 
-          val = parsed_file_contents.dig(*split_keys)
+          val = nil
+
+          current_hash = parsed_file_contents
+
+          split_keys.each do |k|
+            if current_hash[k].is_a?(Hash)
+              current_hash = current_hash[k]
+            else
+              val = current_hash[k]
+              break
+            end
+          end
 
           if val.present?
             val_record = key_record.translation_values.detect{|x| x.locale == locale.to_s }
