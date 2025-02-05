@@ -1,7 +1,7 @@
 # CHANGELOG
 
 ### Unreleased - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.1.1...master)
-- Nothing yet
+- [#27](https://github.com/westonganger/rails_i18n_manager/pull/27) - Only call File.read once for import
 
 ### v1.1.1 - Febuary 4, 2025 - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.1.0...v1.1.1)
 - [#26](https://github.com/westonganger/rails_i18n_manager/pull/26) - Fix file not found issues with file import

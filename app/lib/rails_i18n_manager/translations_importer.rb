@@ -1,9 +1,9 @@
 module RailsI18nManager
-  class TranslationsImportJob
+  class TranslationsImporter
 
     class ImportAbortedError < StandardError; end
 
-    def perform(translation_app_id:, parsed_file_contents:, overwrite_existing: false, mark_inactive_translations: false)
+    def self.import(translation_app_id:, parsed_file_contents:, overwrite_existing: false, mark_inactive_translations: false)
       app_record = TranslationApp.find(translation_app_id)
 
       new_locales = parsed_file_contents.keys - app_record.all_locales

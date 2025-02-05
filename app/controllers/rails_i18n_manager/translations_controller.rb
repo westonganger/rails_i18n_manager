@@ -96,26 +96,21 @@ module RailsI18nManager
     end
 
     def import
-      @form = Forms::TranslationFileForm.new(params[:import_form])
-
       if request.get?
+        @form = Forms::TranslationFileForm.new
         render
       else
-        if @form.valid?
-          if @form.file.path.end_with?(".json")
-            parsed_file_contents = JSON.parse(@form.file.read)
-          else
-            parsed_file_contents = YAML.safe_load(@form.file.read)
-          end
+        @form = Forms::TranslationFileForm.new(params[:import_form])
 
+        if @form.valid?
           begin
-            TranslationsImportJob.new.perform(
+            TranslationsImporter.import(
               translation_app_id: @form.translation_app_id,
-              parsed_file_contents: parsed_file_contents,
+              parsed_file_contents: @form.parsed_file_contents,
               overwrite_existing: @form.overwrite_existing,
               mark_inactive_translations: @form.mark_inactive_translations,
             )
-          rescue TranslationsImportJob::ImportAbortedError => e
+          rescue TranslationsImporter::ImportAbortedError => e
             flash.now.alert = e.message
             render
             return
@@ -123,7 +118,7 @@ module RailsI18nManager
 
           redirect_to translations_path, notice: "Import Successful"
         else
-          flash.now.alert = "Import not started due to form errors."
+          flash.now.alert = "Please see form errors below"
           render
         end
       end

@@ -1,7 +1,7 @@
 require "spec_helper"
 
 module RailsI18nManager
-  RSpec.describe TranslationsImportJob, type: :model do
+  RSpec.describe TranslationsImporter, type: :model do
 
     let(:translation_app){ FactoryBot.create(:translation_app, default_locale: :en, additional_locales: [:fr]) }
 
@@ -23,8 +23,8 @@ module RailsI18nManager
       YAML
 
       expect do
-        TranslationsImportJob.new.perform(translation_app_id: translation_app.id, parsed_file_contents: YAML.safe_load(yaml))
-      end.to raise_error(TranslationsImportJob::ImportAbortedError)
+        TranslationsImporter.import(translation_app_id: translation_app.id, parsed_file_contents: YAML.safe_load(yaml))
+      end.to raise_error(TranslationsImporter::ImportAbortedError)
     end
 
     it "creates the correct amount of TranslationKey and TranslationValue" do
@@ -43,7 +43,7 @@ module RailsI18nManager
           fr_only_key: fr_only
       YAML
 
-      TranslationsImportJob.new.perform(translation_app_id: translation_app.id, parsed_file_contents: YAML.safe_load(yaml))
+      TranslationsImporter.import(translation_app_id: translation_app.id, parsed_file_contents: YAML.safe_load(yaml))
 
       translation_app.reload
 
@@ -69,7 +69,7 @@ module RailsI18nManager
             foo: updated
         YAML
 
-        TranslationsImportJob.new.perform(translation_app_id: translation_app.id, parsed_file_contents: YAML.safe_load(yaml), overwrite_existing: true)
+        TranslationsImporter.import(translation_app_id: translation_app.id, parsed_file_contents: YAML.safe_load(yaml), overwrite_existing: true)
 
         foo_value.reload
 
@@ -105,7 +105,7 @@ module RailsI18nManager
             bar: bar_updated
         YAML
 
-        TranslationsImportJob.new.perform(translation_app_id: translation_app.id, parsed_file_contents: YAML.safe_load(yaml), overwrite_existing: false)
+        TranslationsImporter.import(translation_app_id: translation_app.id, parsed_file_contents: YAML.safe_load(yaml), overwrite_existing: false)
 
         foo_value.reload
         blank_value.reload
@@ -124,7 +124,7 @@ module RailsI18nManager
             baz:
         YAML
 
-        TranslationsImportJob.new.perform(translation_app_id: translation_app.id, parsed_file_contents: YAML.safe_load(yaml), mark_inactive_translations: true)
+        TranslationsImporter.import(translation_app_id: translation_app.id, parsed_file_contents: YAML.safe_load(yaml), mark_inactive_translations: true)
         translation_app.translation_keys.reload
         expect(translation_app.translation_keys.select(&:active).size).to eq(3)
         expect(translation_app.translation_keys.reject(&:active).size).to eq(0)
@@ -136,7 +136,7 @@ module RailsI18nManager
             baz:
         YAML
 
-        TranslationsImportJob.new.perform(translation_app_id: translation_app.id, parsed_file_contents: YAML.safe_load(yaml), mark_inactive_translations: true)
+        TranslationsImporter.import(translation_app_id: translation_app.id, parsed_file_contents: YAML.safe_load(yaml), mark_inactive_translations: true)
         translation_app.translation_keys.reload
         expect(translation_app.translation_keys.select(&:active).size).to eq(2)
         expect(translation_app.translation_keys.reject(&:active).size).to eq(1)
@@ -148,7 +148,7 @@ module RailsI18nManager
             baz:
         YAML
 
-        TranslationsImportJob.new.perform(translation_app_id: translation_app.id, parsed_file_contents: YAML.safe_load(yaml), mark_inactive_translations: true)
+        TranslationsImporter.import(translation_app_id: translation_app.id, parsed_file_contents: YAML.safe_load(yaml), mark_inactive_translations: true)
         translation_app.translation_keys.reload
         expect(translation_app.translation_keys.select(&:active).size).to eq(3)
         expect(translation_app.translation_keys.reject(&:active).size).to eq(0)
@@ -162,7 +162,7 @@ module RailsI18nManager
             baz:
         YAML
 
-        TranslationsImportJob.new.perform(translation_app_id: translation_app.id, parsed_file_contents: YAML.safe_load(yaml), mark_inactive_translations: false)
+        TranslationsImporter.import(translation_app_id: translation_app.id, parsed_file_contents: YAML.safe_load(yaml), mark_inactive_translations: false)
         expect(translation_app.translation_keys.select(&:active).size).to eq(3)
         expect(translation_app.translation_keys.reject(&:active).size).to eq(0)
 
@@ -173,7 +173,7 @@ module RailsI18nManager
             baz:
         YAML
 
-        TranslationsImportJob.new.perform(translation_app_id: translation_app.id, parsed_file_contents: YAML.safe_load(yaml), mark_inactive_translations: false)
+        TranslationsImporter.import(translation_app_id: translation_app.id, parsed_file_contents: YAML.safe_load(yaml), mark_inactive_translations: false)
         expect(translation_app.translation_keys.select(&:active).size).to eq(3)
         expect(translation_app.translation_keys.reject(&:active).size).to eq(0)
       end
