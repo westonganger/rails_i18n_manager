@@ -71,6 +71,8 @@
     <% end %>
   <% elsif type == :textarea %>
     <%= f.text_area method, options[:input_html] %>
+  <% elsif type == :file %>
+    <%= f.file_field method, options[:input_html] %>
   <% else %>
     <%= f.text_field method, options[:input_html] %>
   <% end %>
