@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ### Unreleased - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.1.2...master)
+- [#30](https://github.com/westonganger/rails_i18n_manager/pull/30) - Fix for Rails 6.x where the multipart form enctype was not being applied
 - [#29](https://github.com/westonganger/rails_i18n_manager/pull/29) - Add `permitted_classes: [Symbol]` to `YAML.safe_load` call so that it will not error if there are values that start with a colon character (:)
 
 ### v1.1.2 - February 4, 2025 - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.1.1...v1.1.2)
