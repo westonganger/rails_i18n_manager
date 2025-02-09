@@ -98,6 +98,12 @@ module RailsI18nManager
     end
 
     context "import" do
+      it "renders multipart form enctype" do
+        get rails_i18n_manager.import_translations_path
+        expect(response).to have_http_status(200)
+        expect(response.body).to have_tag(:form, action: "#{rails_i18n_manager.import_translations_path}", enctype: "multipart/form-data")
+      end
+
       it "behaves as expected when nothing uploaded" do
         get rails_i18n_manager.import_translations_path
         expect(response).to have_http_status(200)
