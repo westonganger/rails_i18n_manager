@@ -1,7 +1,11 @@
 # CHANGELOG
 
-### Unreleased - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.1.2...master)
+### Unreleased - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.1.3...master)
 - Nothing yet
+
+### v1.1.3 - February 9, 2025 - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.1.2...v1.1.3)
+- [#30](https://github.com/westonganger/rails_i18n_manager/pull/30) - Fix for Rails 6.x where the multipart form enctype was not being applied
+- [#29](https://github.com/westonganger/rails_i18n_manager/pull/29) - Add `permitted_classes: [Symbol]` to `YAML.safe_load` call so that it will not error if there are values that start with a colon character (:)
 
 ### v1.1.2 - February 4, 2025 - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.1.1...v1.1.2)
 - [#28](https://github.com/westonganger/rails_i18n_manager/pull/28) - Dont use dig method in import which could result in exception `TypeError: Undefined method dig for String`

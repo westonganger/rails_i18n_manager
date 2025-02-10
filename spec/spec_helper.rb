@@ -3,10 +3,12 @@ require "database_cleaner"
 require "factory_bot_rails"
 require "faker"
 require "minitest_change_assertions"
+require "rspec-html-matchers"
 
 require "active_support/all"
 
 RSpec.configure do |config|
+  config.include RSpecHtmlMatchers
 
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true

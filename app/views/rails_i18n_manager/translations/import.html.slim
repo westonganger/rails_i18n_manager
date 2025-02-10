@@ -4,7 +4,7 @@ h2.page-sub-title Import Translations from Source File
 
 .row
   .col-6
-    = custom_form_for @form, as: :import_form, url: import_translations_path, method: :post, multipart: true, html: {class: "form-horizontal"} do |f|
+    = custom_form_for @form, as: :import_form, url: import_translations_path, method: :post, html: {multipart: true, class: "form-horizontal"} do |f|
       = f.error_notification
 
       = f.field :translation_app_id, label: "App Name", type: :select, collection: RailsI18nManager::TranslationApp.order(name: :asc).pluck(:name, :id)
