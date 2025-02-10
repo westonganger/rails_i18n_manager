@@ -1,5 +1,5 @@
 RailsI18nManager::Engine.routes.draw do
-  resources :translations, only: [:index, :show, :edit, :update, :destroy] do
+  resources :translations, only: [:index, :show, :edit, :update, :destroy, :new, :create] do
     collection do
       post :translate_missing
 

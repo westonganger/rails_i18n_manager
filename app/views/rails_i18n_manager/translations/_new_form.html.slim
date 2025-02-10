@@ -1,0 +1,12 @@
+- view_mode = params[:action] == "show"
+
+= custom_form_for @translation_key, url: translations_path, method: :post, defaults: { view_mode: view_mode, field_layout: :horizontal } do |f|
+    .form-group
+        = f.label :translation_app_id, "App Name"
+        = f.field :translation_app_id, type: :select, collection: RailsI18nManager::TranslationApp.order(name: :asc).pluck(:name, :id)
+        = f.label :key, "New Key"
+        = f.text_field :key, label: "New Key", class: "form-control", placeholder: "Enter key"
+    .form-group
+      .col-lg-offset-2.col-md-offset-2.col-sm-offset-3.col-lg-10.col-md-10.col-sm-9
+        button.btn.btn-primary type="submit" Save
+        = link_to "Cancel", { action: :index }, class: 'btn btn-secondary space-left2'
