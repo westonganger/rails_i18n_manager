@@ -1,7 +1,7 @@
 # CHANGELOG
 
 ### Unreleased - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.1.3...master)
-- Nothing yet
+- [#34](https://github.com/westonganger/rails_i18n_manager/pull/34) - Fix issue where CSS was missing utility classes for `float: right`
 
 ### v1.1.3 - February 9, 2025 - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.1.2...v1.1.3)
 - [#30](https://github.com/westonganger/rails_i18n_manager/pull/30) - Fix for Rails 6.x where the multipart form enctype was not being applied
