@@ -142,6 +142,25 @@ curl https://translations-manager.example.com/translations.zip?export_format=jso
   && echo "Locales are now updated, app restart not-required"
 ```
 
+## Recommended Workflow for Teams
+
+It is desirable to reduce how often import/export is performed. It is also desirable that we do not violate the regular PR lifecycle/process. The following workflow should allow for this.
+
+When creating a PR you can just create a new YAML file named after your feature name or ticket number and then use the following format:
+
+```yaml
+# config/locales/some_new_feature.yml
+
+en:
+  some_new_key: "foo"
+fr:
+  some_new_key: "bar"
+es:
+  some_new_key: "baz"
+```
+
+Whenever releasing a new version of your application, pre-deploy or some other cadence, then you can have a step where all translation files are uploaded to the `rails_i18n_manager`, have your translator folks double check everything, then export your new files and cleanup all the feature files.
+
 ## Development
 
 Run migrations using: `rails db:migrate`
