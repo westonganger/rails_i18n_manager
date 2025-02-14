@@ -40,7 +40,7 @@ module RailsI18nManager
         redirect_to action: :index
       else
         flash.now[:error] = "Update failed."
-        render "rails_i18n_manager/translation_apps/form"
+        render "form"
       end
     end
 

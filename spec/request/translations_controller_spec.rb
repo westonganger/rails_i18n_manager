@@ -114,6 +114,24 @@ module RailsI18nManager
           translation_value.reload
         end
       end
+
+      it "renders edit page when there are validation errors" do
+        assert_not_changed ->(){ default_translation_value.translation } do
+          patch rails_i18n_manager.translation_path(translation_key), params: {
+            translation_key: {
+              translation_values_attributes: {
+                "0" => {
+                  id: default_translation_value.id,
+                  translation: "",
+                }
+              }
+            }
+          }
+
+          expect(response).to render_template("translations/edit")
+          default_translation_value.reload
+        end
+      end
     end
 
     context "translate_missing" do

@@ -72,7 +72,7 @@ module RailsI18nManager
         redirect_to edit_translation_path(@translation_key)
       else
         flash[:notice] = "Update failed."
-        render "translations/edit"
+        render "edit"
       end
     end
 
