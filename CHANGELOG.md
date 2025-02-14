@@ -1,6 +1,9 @@
 # CHANGELOG
 
-### Unreleased - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.1.3...master)
+### Unreleased - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.1.4...master)
+- Nothing yet
+
+### v1.1.4 - February 14, 2025 - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.1.3...v1.1.4)
 - [#37](https://github.com/westonganger/rails_i18n_manager/pull/37) - Add recommended I18n configuration to the README
 - [#36](https://github.com/westonganger/rails_i18n_manager/pull/36) - Many fixes on the Translations#index page
 - [#35](https://github.com/westonganger/rails_i18n_manager/pull/35) - Fix render issues when there were form validation errors
