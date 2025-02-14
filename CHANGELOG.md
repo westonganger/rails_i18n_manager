@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ### Unreleased - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.1.3...master)
+- [#36](https://github.com/westonganger/rails_i18n_manager/pull/36) - Many fixes on the Translations#index page
 - [#34](https://github.com/westonganger/rails_i18n_manager/pull/34) - Fix issue where CSS was missing utility classes for `float: right`
 
 ### v1.1.3 - February 9, 2025 - [View Diff](https://github.com/westonganger/rails_i18n_manager/compare/v1.1.2...v1.1.3)

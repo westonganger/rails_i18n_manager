@@ -10,21 +10,53 @@ module RailsI18nManager
       it "renders" do
         get rails_i18n_manager.translations_path
         expect(response).to have_http_status(200)
+      end
 
-        get rails_i18n_manager.translations_path, params: {search: "foobarfoobar"}
-        expect(response).to have_http_status(200)
-
-        get rails_i18n_manager.translations_path, params: {status: "Missing"}
-        expect(response).to have_http_status(200)
-
-        get rails_i18n_manager.translations_path, params: {translation_app_id: translation_app.id}
-        expect(response).to have_http_status(200)
-
+      it "sorts records" do
         ["", 'asc','desc'].each do |direction|
           ['app_name','key','updated_at'].each do |col|
             get rails_i18n_manager.translations_path, params: {sort: col, direction: direction}
             expect(response).to have_http_status(200), "Error: #{direction} #{col}"
           end
+        end
+      end
+
+      context "filters" do
+        it "renders with search filter" do
+          get rails_i18n_manager.translations_path, params: {filters: {search: "foobarfoobar"}}
+          expect(response).to have_http_status(200)
+        end
+
+        it "renders with app name filter" do
+          get rails_i18n_manager.translations_path, params: {filters: {app_name: translation_app.name}}
+          expect(response).to have_http_status(200)
+        end
+
+        it "status is All Active Translations" do
+          get rails_i18n_manager.translations_path, params: {filters: {status: "All Active Translations"}}
+          expect(response).to have_http_status(200)
+          expect(assigns(:translation_keys).all?(&:active)).to eq(true)
+        end
+
+        it "status is All Translations" do
+          get rails_i18n_manager.translations_path, params: {filters: {status: "All  Translations"}}
+          expect(response).to have_http_status(200)
+        end
+
+        it "status is Inactive Translations" do
+          get rails_i18n_manager.translations_path, params: {filters: {status: "Inactive Translations"}}
+          expect(response).to have_http_status(200)
+          expect(assigns(:translation_keys).none?(&:active)).to eq(true)
+        end
+
+        it "status is Missing Default Translation" do
+          get rails_i18n_manager.translations_path, params: {filters: {status: "Missing Default Translation"}}
+          expect(response).to have_http_status(200)
+        end
+
+        it "status is Missing Any Translation" do
+          get rails_i18n_manager.translations_path, params: {filters: {status: "Missing Any Translation"}}
+          expect(response).to have_http_status(200)
         end
       end
 
@@ -87,10 +119,10 @@ module RailsI18nManager
     context "translate_missing" do
       it "succeeds" do
         post rails_i18n_manager.translate_missing_translations_path
-        expect(response).to redirect_to(rails_i18n_manager.translations_path)
+        expect(response).to redirect_to(rails_i18n_manager.translations_path(filters: {status: "All Active Translations"}))
 
-        post rails_i18n_manager.translate_missing_translations_path(app_name: translation_app.name)
-        expect(response).to redirect_to(rails_i18n_manager.translations_path(app_name: translation_app.name))
+        post rails_i18n_manager.translate_missing_translations_path(filters: {app_name: translation_app.name})
+        expect(response).to redirect_to(rails_i18n_manager.translations_path(filters: {app_name: translation_app.name, status: "All Active Translations"}))
 
         post rails_i18n_manager.translate_missing_translations_path(translation_key_id: translation_key.id)
         expect(response).to redirect_to(rails_i18n_manager.translation_path(translation_key))
