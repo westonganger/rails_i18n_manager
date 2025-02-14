@@ -161,6 +161,69 @@ es:
 
 Whenever releasing a new version of your application, pre-deploy or some other cadence, then you can have a step where all translation files are uploaded to the `rails_i18n_manager`, have your translator folks double check everything, then export your new files and cleanup all the feature files.
 
+## Recommended I18n Configuration
+
+The default I18n backend has some glaring issues
+
+- It will silently show "translation_missing" text which is very undesirable
+- It will not fallback to your default or any other locale
+
+You can avoid these issues using either of the techniques below
+
+```ruby
+# config/initializers/i18n.rb
+
+Rails.configuration do |config|
+  config.i18n.raise_on_missing_translations = true # WARNING: this will raise exceptions in Production too, preventing your users from using your application even when some silly little translation  is missing
+
+  config.i18n.fallbacks = [I18n.default_locale, :en].uniq # fallback to default locale, or if that is missing then fallback to english translation
+end
+```
+
+You will likely find that `raise_on_missing_translations` is too aggressive. Causing major outages just because a translation is missing. In that scenario its better to use something like the following:
+
+```ruby
+# config/initializers/i18n.rb
+
+Rails.configuration do |config|
+  config.i18n.raise_on_missing_translations = false # Instead we use the custom backend below
+
+  config.i18n.fallbacks = [I18n.default_locale, :en].uniq # fallback to default locale, or if that is missing then fallback to english translation
+end
+
+module I18n
+  class CustomI18nBackend
+    include I18n::Backend::Base
+
+    def translate(locale, key, options = EMPTY_HASH)
+      if !key.nil? && key.to_s != "i18n.plural.rule"
+        translation_value = lookup(locale, key, options[:scope], options)
+
+        if translation_value.blank?
+          if Rails.env.production?
+            # send an email or some other warning mechanism
+          else
+            # Raise exception in non-production environments
+            raise "Translation not found (locale: #{locale}, key: #{key})"
+          end
+        end
+      end
+
+      return nil # allow the Backend::Chain to continue to the next backend
+    end
+  end
+end
+
+if I18n.backend.is_a?(I18n::Backend::Chain)
+  I18n.backend.backends.unshift(I18n::CustomI18nBackend)
+else
+  I18n.backend = I18n::Backend::Chain.new(
+    I18n::CustomI18nBackend,
+    I18n.backend, # retain original backend
+  )
+end
+```
+
 ## Development
 
 Run migrations using: `rails db:migrate`
