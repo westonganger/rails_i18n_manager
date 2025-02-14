@@ -36,12 +36,16 @@ module RailsI18nManager
 
           case request.format.to_sym
           when :csv
+            if params.dig(:filters, :app_name).present?
+              @translation_keys = @translation_keys.joins(:translation_app).where(TranslationApp.table_name => {name: params.dig(:filters, :app_name)})
+            end
+
             send_data @translation_keys.to_csv, filename: "translations.csv"
           when :zip
-            file = @translation_keys.export_to(format: params[:export_format], zip: true, app_name: params[:app_name].presence)
+            file = @translation_keys.export_to(format: params[:export_format], zip: true, app_name: params.dig(:filters, :app_name).presence)
 
             if file
-              send_file file, filename: "translations-#{params[:export_format]}-#{params[:app_name].presence || "all-apps"}.zip"
+              send_file file, filename: "translations-#{params[:export_format]}-#{params.dig(:filters, :app_name).presence || "all-apps"}.zip"
             else
               flash[:alert] = "Sorry, Nothing to export"
               redirect_to action: :index
@@ -89,10 +93,10 @@ module RailsI18nManager
 
       apply_filters
 
-      ids = translation_keys.pluck(:id)
+      @translation_keys.destroy_all
 
-      TranslationKey.where(id: ids).delete_all
-      TranslationValue.where(translation_key_id: ids).delete_all
+      flash[:notice] = "Delete Inactive was successful."
+      redirect_to translations_path(filters: params[:filters].to_unsafe_h)
     end
 
     def import
@@ -132,8 +136,8 @@ module RailsI18nManager
       translated_count = 0
       total_missing = 0
 
-      if params[:app_name]
-        app_locales = TranslationApp.find_by(name: params[:app_name]).additional_locales_array
+      if params.dig(:filters, :app_name)
+        app_locales = TranslationApp.find_by(name: params.dig(:filters, :app_name)).additional_locales_array
       else
         @translation_keys = @translation_keys.includes(:translation_app)
       end
@@ -184,7 +188,7 @@ module RailsI18nManager
       if params[:translation_key_id]
         url = request.referrer || translation_path(params[:translation_key_id])
       else
-        url = params.to_unsafe_h.merge(action: :index)
+        url = translations_path(filters: params[:filters].to_unsafe_h)
       end
 
       redirect_to url, notice: "Translated #{translated_count} of #{total_missing} total missing translations"
@@ -201,8 +205,8 @@ module RailsI18nManager
     end
 
     def apply_filters
-      if params[:app_name].present?
-        @translation_keys = @translation_keys.joins(:translation_app).where(TranslationApp.table_name => {name: params[:app_name]})
+      if params.dig(:filters, :app_name).present?
+        @translation_keys = @translation_keys.joins(:translation_app).where(TranslationApp.table_name => {name: params.dig(:filters, :app_name)})
       end
 
       if params[:translation_key_id].present?
@@ -212,24 +216,40 @@ module RailsI18nManager
       if request.format.html?
         ### ONLY FOR HTML - SO THAT WE DONT DOWNLOAD INCOMPLETE TRANSLATION EXPORT PACKAGES
 
-        if params[:search].present?
-          @translation_keys = @translation_keys.search(params[:search])
+        if params.dig(:filters, :search).present?
+          @translation_keys = @translation_keys.search(params.dig(:filters, :search))
         end
 
-        if params[:status] == "Inactive"
+        if params.dig(:filters, :status).blank?
+          params[:filters] ||= {}
+          params[:filters][:status] = "All Active Translations"
+        end
+
+        if params.dig(:filters, :status) == "Inactive Translations"
           @translation_keys = @translation_keys.where(active: false)
-        elsif params[:status] == "All"
+        elsif params.dig(:filters, :status) == "All Translations"
           # Do nothing
-        else
+        elsif params.dig(:filters, :status) == "All Active Translations"
           @translation_keys = @translation_keys.where(active: true)
-        end
-
-        if params[:status] == "Missing"
+        elsif params.dig(:filters, :status).start_with?("Missing")
           missing_key_ids = []
-          TranslationApp.all.each do |app_record|
-            app_record.translation_keys.includes(:translation_values).each do |key_record|
-              if key_record.translation_values.size != app_record.all_locales.size
-                missing_key_ids << key_record.id
+
+          if params.dig(:filters, :app_name).present?
+            translation_apps = TranslationApp.where(name: params.dig(:filters, :app_name))
+          else
+            translation_apps = TranslationApp.all
+          end
+
+          translation_apps.includes(translation_keys: [:translation_values]).each do |app_record|
+            app_record.translation_keys.each do |key_record|
+              if params.dig(:filters, :status) == "Missing Default Translation"
+                if key_record.translation_values.detect{|x| x.locale == app_record.default_locale}&.translation.blank?
+                  missing_key_ids << key_record.id
+                end
+              else
+                if key_record.any_missing_translations?
+                  missing_key_ids << key_record.id
+                end
               end
             end
           end

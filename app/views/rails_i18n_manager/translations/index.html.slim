@@ -1,19 +1,19 @@
 .pull-right
-  = link_to "Translate with Google", params.to_unsafe_h.merge(action_name: :translate_missing), class: "btn btn-primary btn-sm", "data-confirm" => "Are you sure you want to proceed with translating the missing translations in the currently filtered list?"
+  = link_to "Translate with Google", translate_missing_translations_path(filters: params[:filters].to_unsafe_h), class: "btn btn-primary btn-sm", "data-method" => "post", "data-confirm" => "Are you sure you want to proceed with translating the missing translations in the currently filtered list?"
   = link_to "Import Translations", import_translations_path, class: "btn btn-secondary btn-sm space-left2"
-  = link_to "Delete Inactive", params.to_unsafe_h.merge(action_name: :delete_inactive_keys), class: "btn btn-danger btn-sm space-left2", data: {confirm: "Warning! This is a highly destructive action.\n\nIts possible to incorrectly upload an incomplete or incorrect file to 'Mark Inactive Translations from Source' which can leave you with inactive keys that maybe shouldnt have been inactivated.\n\nPlease proceed only if you are certain that you do not have any keys that are incorrectly marked inactive.\n\nAre you sure you want to proceed with deleting the inactive translations in the currently filtered list?"}
+  = link_to "Delete Inactive", delete_inactive_keys_translations_path(filters: params[:filters].to_unsafe_h), class: "btn btn-danger btn-sm space-left2", "data-method" => "delete", "data-confirm" => "Warning! This is a highly destructive action.\n\nIts possible to incorrectly upload an incomplete or incorrect file to 'Mark Inactive Translations from Source' which can leave you with inactive keys that maybe shouldnt have been inactivated.\n\nPlease proceed only if you are certain that you do not have any keys that are incorrectly marked inactive.\n\nAre you sure you want to proceed with deleting the inactive translations in the currently filtered list?"
 
 h2.page-title Translations
-- if params[:app_name]
+- if params[:app_name].present?
   h5.page-title App Name: #{params[:app_name]}
 
 br
 
 .well.well-sm
   .btn-group.pull-right.text-right
-    = link_to "Export to CSV", params.to_unsafe_h.merge(format: :csv), class: "btn btn-sm btn-success"
-    = link_to "YAML", params.to_unsafe_h.merge(format: :zip, export_format: :yaml), class: "btn btn-sm btn-success"
-    = link_to "JSON", params.to_unsafe_h.merge(format: :zip, export_format: :json), class: "btn btn-sm btn-success"
+    = link_to "Export to CSV", translations_path(format: :csv, app_name: params[:app_name]), class: "btn btn-sm btn-success"
+    = link_to "YAML", translations_path(format: :zip, export_format: :yaml, app_name: params[:app_name]), class: "btn btn-sm btn-success"
+    = link_to "JSON", translations_path(format: :zip, export_format: :json, app_name: params[:app_name]), class: "btn btn-sm btn-success"
 
   .pull-right.space-right2
 
@@ -25,7 +25,7 @@ table.table.table-striped.table-hover.space-above3.list-table
       th = sort_link(:app_name)
       th = sort_link(:key)
       th Default Translation
-      - if params[:status] == "Inactive"
+      - if params[:status] != "All Active Translations"
         th Status
       th = sort_link(:updated_at)
       th Actions
@@ -35,7 +35,7 @@ table.table.table-striped.table-hover.space-above3.list-table
         td = x.translation_app.name
         td = x.key
         td = x.default_translation
-        - if params[:status] == "Inactive"
+        - if params[:status] != "All Active Translations"
           td Inactive
         td = x.updated_at&.strftime("%Y-%m-%d %l:%M %p")
         td
