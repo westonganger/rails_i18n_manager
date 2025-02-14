@@ -1,4 +1,5 @@
 .pull-right
+  = link_to "New translation", new_translation_path, class: "btn btn-primary btn-sm space-right2"
   = link_to "Translate with Google", params.to_unsafe_h.merge(action_name: :translate_missing), class: "btn btn-primary btn-sm", "data-confirm" => "Are you sure you want to proceed with translating the missing translations in the currently filtered list?"
   = link_to "Import Translations", import_translations_path, class: "btn btn-secondary btn-sm space-left2"
   = link_to "Delete Inactive", params.to_unsafe_h.merge(action_name: :delete_inactive_keys), class: "btn btn-danger btn-sm space-left2", data: {confirm: "Warning! This is a highly destructive action.\n\nIts possible to incorrectly upload an incomplete or incorrect file to 'Mark Inactive Translations from Source' which can leave you with inactive keys that maybe shouldnt have been inactivated.\n\nPlease proceed only if you are certain that you do not have any keys that are incorrectly marked inactive.\n\nAre you sure you want to proceed with deleting the inactive translations in the currently filtered list?"}
