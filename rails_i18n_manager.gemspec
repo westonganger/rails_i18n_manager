@@ -24,6 +24,10 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rubyzip"
   spec.add_dependency "activerecord-import"
 
+  if RUBY_VERSION.to_f >= 3.4
+    spec.add_dependency "csv"
+  end
+
   spec.add_development_dependency "sqlite3"
   spec.add_development_dependency "rspec-rails"
   spec.add_development_dependency "rspec-html-matchers"
